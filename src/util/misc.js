@@ -7,11 +7,30 @@ export function has2xxResponse(res: Object): boolean {
 }
 
 export function sortAlpha(a: string, b: string): number {
-  // sort alphabetically in a deterministic way
+  function getDigit(str: string, i: number): string {
+    let digit = '';
+    while (isDigit(str[i])) {
+      digit += str[i++];
+    }
+    return digit;
+  }
+  const isDigit = c => c >= 0 && c <= 9;
   const shortLen = Math.min(a.length, b.length);
-  for (let i = 0; i < shortLen; i++) {
-    const aChar = a.charCodeAt(i);
-    const bChar = b.charCodeAt(i);
+  for (let i = 0, i2 = 0; i < shortLen; i++, i2++) {
+    let aChar = a.charAt(i);
+    let bChar = b.charAt(i2);
+    if (isDigit(aChar)) {
+      aChar = getDigit(a, i);
+      i += aChar.length - 1;
+    }
+    if (isDigit(bChar)) {
+      bChar = getDigit(b, i2);
+      i2 += bChar.length - 1;
+    }
+    if (aChar.length === 1 && bChar.length === 1) {
+      aChar = aChar.charCodeAt(0);
+      bChar = bChar.charCodeAt(0);
+    }
     if (aChar !== bChar) {
       return aChar - bChar;
     }
